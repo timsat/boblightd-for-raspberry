@@ -19,6 +19,9 @@
 #ifndef CONFIGURATION
 #define CONFIGURATION
 
+//Fix for spi support
+#define HAVE_LINUX_SPI_SPIDEV_H
+
 #include <string>
 #include <vector>
 
