@@ -1,19 +1,30 @@
 boblightd-for-raspberry
 =======================
 
-<<<<<<< HEAD
 Optimized version for raspberry
-<<<<<<< HEAD
-=======
-Optimized version for raspberry
->>>>>>> 815d507d3a2d0aeb623d4c00023bad2a46a9611f
-=======
 
-/* How to compile */
+#### This version needs another lightnames in boblight.conf, only 3 chars not more and not lower ####
+
+[light]
+
+name            1 ## This is wrong, it must be XX1 or 001 or 1XX
+
+color           red     ambilight 1
+
+color           green   ambilight 2
+
+color           blue    ambilight 3
+
+hscan           30 35
+
+vscan           90 100
+
+#### How to compile ####
 
 ./configure
 
 make & make install
 
 Have fun!
->>>>>>> 56f8e3d94de00c0541ac65c3613cbc2e8e739754
+
+
