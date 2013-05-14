@@ -1,6 +1,8 @@
 /*
- * boblight
- * Copyright (C) Bob  2009 
+ * Boblight
+ * Orginal: Copyright (C) Bob  2009 
+ * 
+ * Modded by Speedy1985 (c) 2013
  * 
  * boblight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,6 +24,12 @@
 #include <string>
 #include <iostream> //debug
 #include <sstream>
+
+//
+// We use the boost library for better cpu performance, the orginal ToString function need to much cpu time.
+//
+#include <boost/lexical_cast.hpp>
+//
 
 #include "boblight_client.h"
 #include "util/misc.h"
@@ -50,7 +58,7 @@ CLight::CLight()
   memset(m_hscanscaled, 0, sizeof(m_hscanscaled));
   memset(m_vscanscaled, 0, sizeof(m_vscanscaled));
 
-  for (int i = 0; i < GAMMASIZE; i++)
+  for (int i = 0; i < GAMMASIZE; ++i)
     m_gammacurve[i] = i;
 }
 
@@ -103,7 +111,7 @@ std::string CLight::GetOption(const char* option, std::string& output)
   #define BOBLIGHT_OPTION(name, type, min, max, default, variable, postprocess) \
   if (#name == strname)\
   {\
-    output = ToString(variable);\
+    output = boost::lexical_cast<string>(variable);\
     return "";\
   }
   #include "options.h"
@@ -137,7 +145,7 @@ void CLight::GetRGB(float* rgb)
   //if no pixels are set, the denominator is 0, so just return black
   if (m_rgbcount == 0)
   {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; ++i)
     {
       rgb[i] = 0.0f;
       m_rgb[i] = 0.0f;
@@ -147,7 +155,7 @@ void CLight::GetRGB(float* rgb)
   }
   
   //convert from numerator/denominator to float
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; ++i)
   {
     rgb[i] = Clamp(m_rgb[i] / (float)m_rgbcount / 255.0f, 0.0f, 1.0f);
     m_rgb[i] = 0.0f;
@@ -212,7 +220,7 @@ void CLight::GetRGB(float* rgb)
 
     if (hsv[0] == -1.0f) //grayscale
     {
-      for (int i = 0; i < 3; i++)
+      for (int i = 0; i < 3; ++i)
         rgb[i] = hsv[2];
     }
     else
@@ -240,7 +248,7 @@ void CLight::GetRGB(float* rgb)
       { rgb[0] = v; rgb[1] = p; rgb[2] = q; }               
     }
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; ++i)
       rgb[i] = Clamp(rgb[i], 0.0f, 1.0f);
   }
 }
@@ -295,7 +303,7 @@ int CBoblight::Connect(const char* address, int port, int usectimeout)
   message = m_messagequeue.GetMessage();
   if (!ParseWord(message, "hello"))
   {
-    m_error = m_address + ":" + ToString(m_port) + " sent gibberish";
+    m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " sent gibberish";
     return 0;
   }
 
@@ -310,14 +318,14 @@ int CBoblight::Connect(const char* address, int port, int usectimeout)
   
   if (!ParseWord(message, "version") || !GetWord(message.message, word))
   {
-    m_error = m_address + ":" + ToString(m_port) + " sent gibberish";
+    m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " sent gibberish";
     return 0;
   }
 
   //if we don't get the same protocol version back as we have, we can't work together
   if (word != PROTOCOLVERSION)
   {
-    m_error = "version mismatch, " + m_address + ":" + ToString(m_port) + " has version \"" + word +
+    m_error = "version mismatch, " + m_address + ":" + boost::lexical_cast<string>(m_port) + " has version \"" + word +
               "\", libboblight has version \"" + PROTOCOLVERSION + "\"";
     return 0;
   }
@@ -332,7 +340,7 @@ int CBoblight::Connect(const char* address, int port, int usectimeout)
   message = m_messagequeue.GetMessage();
   if (!ParseLights(message))
   {
-    m_error = m_address + ":" + ToString(m_port) + " sent gibberish";
+    m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " sent gibberish";
     return 0;
   }
   
@@ -401,7 +409,7 @@ bool CBoblight::ReadDataToQueue()
 
     if (m_messagequeue.GetRemainingDataSize() > MAXDATA)
     {
-      m_error = m_address + ":" + ToString(m_port) + " sent too much data";
+      m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " sent too much data";
       return false;
     }
 
@@ -410,7 +418,7 @@ bool CBoblight::ReadDataToQueue()
 
   if (nrmessages == m_messagequeue.GetNrMessages())
   {
-    m_error = m_address + ":" + ToString(m_port) + " read timed out";
+    m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " read timed out";
     return false;
   }
   return true;
@@ -449,7 +457,7 @@ bool CBoblight::ParseLights(CMessage& message)
   if (!ParseWord(message, "lights") || !GetWord(message.message, word) || !StrToInt(word, nrlights) || nrlights < 1)
     return false;
 
-  for (int i = 0; i < nrlights; i++)
+  for (int i = 0; i < nrlights; ++i)
   {
     CLight light;
 
@@ -474,7 +482,7 @@ bool CBoblight::ParseLights(CMessage& message)
 
     //now we read the scanrange
     string scanarea;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; ++i)
     {
       if (!GetWord(message.message, word))
         return false;
@@ -505,7 +513,7 @@ const char* CBoblight::GetLightName(int lightnr)
 
 int CBoblight::SetPriority(int priority)
 {
-  string data = "set priority " + ToString(priority) + "\n";
+  string data = "set priority " + boost::lexical_cast<string>(priority) + "\n";
 
   return WriteDataToSocket(data);
 }
@@ -516,7 +524,7 @@ bool CBoblight::CheckLightExists(int lightnr, bool printerror /*= true*/)
   {
     if (printerror)
     {
-      m_error = "light " + ToString(lightnr) + " doesn't exist (have " + ToString(m_lights.size()) + " lights)";
+      m_error = "light " + boost::lexical_cast<string>(lightnr) + " doesn't exist (have " + boost::lexical_cast<string>(m_lights.size()) + " lights)";
     }
     return false;
   }
@@ -525,7 +533,7 @@ bool CBoblight::CheckLightExists(int lightnr, bool printerror /*= true*/)
 
 void CBoblight::SetScanRange(int width, int height)
 {
-  for (int i = 0; i < m_lights.size(); i++)
+  for (int i = 0; i < m_lights.size(); ++i)
   {
     m_lights[i].SetScanRange(width, height);
   }
@@ -538,7 +546,7 @@ int CBoblight::AddPixel(int lightnr, int* rgb)
 
   if (lightnr < 0)
   {
-    for (int i = 0; i < m_lights.size(); i++)
+    for (int i = 0; i < m_lights.size(); ++i)
       m_lights[i].AddPixel(rgb);
   }
   else
@@ -551,7 +559,7 @@ int CBoblight::AddPixel(int lightnr, int* rgb)
 
 void CBoblight::AddPixel(int* rgb, int x, int y)
 {
-  for (int i = 0; i < m_lights.size(); i++)
+  for (int i = 0; i < m_lights.size(); ++i)
   {
     if (x >= m_lights[i].m_hscanscaled[0] && x <= m_lights[i].m_hscanscaled[1] &&
         y >= m_lights[i].m_vscanscaled[0] && y <= m_lights[i].m_vscanscaled[1])
@@ -565,13 +573,13 @@ int CBoblight::SendRGB(int sync, int* outputused)
 {
   string data;
 
-  for (int i = 0; i < m_lights.size(); i++)
+  for (int i = 0; i < m_lights.size(); ++i)
   {
     float rgb[3];
     m_lights[i].GetRGB(rgb);
-    data += "set light " + m_lights[i].m_name + " rgb " + ToString(rgb[0]) + " " + ToString(rgb[1]) + " " + ToString(rgb[2]) + "\n";
+    data += "set light " + m_lights[i].m_name + " rgb " + boost::lexical_cast<string>(rgb[0]) + " " + boost::lexical_cast<string>(rgb[1]) + " " + boost::lexical_cast<string>(rgb[2]) + "\n";
     if (m_lights[i].m_autospeed > 0.0 && m_lights[i].m_singlechange > 0.0)
-      data += "set light " + m_lights[i].m_name + " singlechange " + ToString(m_lights[i].m_singlechange) + "\n";
+      data += "set light " + m_lights[i].m_name + " singlechange " + boost::lexical_cast<string>(m_lights[i].m_singlechange) + "\n";
   }
 
   //send a message that we want devices to sync to our input
@@ -608,7 +616,7 @@ int CBoblight::Ping(int* outputused, bool send)
 
   if (!GetWord(message.message, word) || word != "ping")
   {
-    m_error = m_address + ":" + ToString(m_port) + " sent gibberish";
+    m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " sent gibberish";
     return 0;
   }
 
@@ -617,7 +625,7 @@ int CBoblight::Ping(int* outputused, bool send)
   {
     if (!GetWord(message.message, word) || !StrToInt(word, *outputused))
     {
-      m_error = m_address + ":" + ToString(m_port) + " sent gibberish";
+      m_error = m_address + ":" + boost::lexical_cast<string>(m_port) + " sent gibberish";
       return 0;
     }
   }
@@ -649,7 +657,7 @@ int CBoblight::SetOption(int lightnr, const char* option)
 
   if (lightnr < 0)
   {
-    for (int i = 0; i < m_lights.size(); i++)
+    for (int i = 0; i < m_lights.size(); ++i)
     {
       error = m_lights[i].SetOption(option, send);
       if (!error.empty())
