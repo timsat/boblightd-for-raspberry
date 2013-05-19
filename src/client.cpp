@@ -18,7 +18,6 @@
  */
 
 #include <iostream> //debug
-#include <string>
 #include <list>
 
 #include <locale.h>
@@ -31,6 +30,12 @@
 #include "util/timeutils.h"
 #include "protocolversion.h"
 
+//
+// We use the boost library for better cpu performance, the orginal ToString function need to much cpu time.
+//
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
+
 using namespace std;
 
 extern volatile bool g_stop;
@@ -39,7 +44,6 @@ CClient::CClient()
 {
 	m_priority = 255;
 	m_connecttime = -1;
-
 }
 
 int CClient::LightNameToInt(std::string& lightname)
@@ -138,7 +142,6 @@ void CClientsHandler::Cleanup()
 
 	Log("closing listening socket");
 	m_socket.Close();
-
 	Log("clients handler stopped");
 }
 
@@ -146,8 +149,6 @@ void CClientsHandler::Cleanup()
 void CClientsHandler::AddClient(CClient* client)
 {
 	CLock lock(m_mutex);
-    
-    Log("AddClient");
     
 	if (m_clients.size() >= FD_SETSIZE) //maximum number of clients reached
 	{
@@ -320,7 +321,7 @@ bool CClientsHandler::ParseMessage(CClient* client, CMessage& message)
 	else if (messageString[0] == 'g')
 	{
 		// get
-		messageString = messageString + 4;
+		messageString = messageString + 4; // string = get xxxxx // messageString +4 means, set [0] to start from [4]
 		return ParseGet(client, messageString, message);
 	}
 	else if (messageString[0] == 's' && messageString[1] == 'e')
@@ -346,7 +347,6 @@ bool CClientsHandler::ParseMessage(CClient* client, CMessage& message)
 
 bool CClientsHandler::ParseGet(CClient* client, const char *message, CMessage& messageOrg)
 {
-
 	//Log("Get->%s", message);
 	//Log("Get->%c", message[0]);
     
@@ -388,17 +388,17 @@ bool CClientsHandler::SendLights(CClient* client)
 	CTcpData data;
 
 	//build up messages by appending to CTcpData
-	data.SetData("lights " + ToString(client->m_lights.size()) + "\n");
+	data.SetData("lights " + boost::lexical_cast<string>(client->m_lights.size()) + "\n");
     
 	for (int i = 0; i < client->m_lights.size(); ++i)
 	{
 		data.SetData("light " + client->m_lights[i].GetName() + " ", true);
 
 		data.SetData("scan ", true);
-		data.SetData(ToString(client->m_lights[i].GetVscan()[0]) + " ", true);
-		data.SetData(ToString(client->m_lights[i].GetVscan()[1]) + " ", true);
-		data.SetData(ToString(client->m_lights[i].GetHscan()[0]) + " ", true);
-		data.SetData(ToString(client->m_lights[i].GetHscan()[1]), true);
+		data.SetData(boost::lexical_cast<string>(client->m_lights[i].GetVscan()[0]) + " ", true);
+		data.SetData(boost::lexical_cast<string>(client->m_lights[i].GetVscan()[1]) + " ", true);
+		data.SetData(boost::lexical_cast<string>(client->m_lights[i].GetHscan()[0]) + " ", true);
+		data.SetData(boost::lexical_cast<string>(client->m_lights[i].GetHscan()[1]), true);
 		data.SetData("\n", true);
 	}
 
@@ -428,7 +428,7 @@ bool CClientsHandler::SendPing(CClient* client)
 	lock.Leave();
 
 	CTcpData data;
-	data.SetData("ping " + ToString(lightsused) + "\n");
+	data.SetData("ping " + boost::lexical_cast<string>(lightsused) + "\n");
 
 	if (client->m_socket.Write(data) != SUCCESS)
 	{
@@ -443,7 +443,7 @@ bool CClientsHandler::ParseSet(CClient* client, const char *message, CMessage& m
 
 	if (message[0] == 'p')
 	{
-		// priority
+		// priority XXX
 		message = message + 9;
 		int priority = atoi(message);
 
@@ -475,13 +475,8 @@ bool CClientsHandler::ParseSetLight(CClient* client, const char* message, CMessa
 	light[3] = '\0';
 
 	std::string lightName(light);
-	
-	if(lightName.size() > 3 || lightName.size() < 3){
-	    LogError("Lightnames must be 3 chars, XX1 XX2 XX3 and so on... exit.");
-	    return false;
-	}
-	
-	//Delete from memory
+    
+    //delete char
     delete(light);
   
 	int lightnr = client->LightNameToInt(lightName);
@@ -493,7 +488,6 @@ bool CClientsHandler::ParseSetLight(CClient* client, const char* message, CMessa
 	}
 
 	message = message + 4;
-
 
 	if (lightnr == -1)
 	{
@@ -508,16 +502,16 @@ bool CClientsHandler::ParseSetLight(CClient* client, const char* message, CMessa
 		string value;
 		message = message + 4;
 		//Log("Floats:%s", message);
-
-		char* pEnd1;
-		char* pEnd2;
-
-		rgb[0] = strtof(message, &pEnd1);
-		rgb[1] = strtof(pEnd1, &pEnd2);
-		rgb[2] = strtof(pEnd2, NULL);
+        
+        std::vector<std::string> strs;
+        boost::split(strs, message, boost::is_any_of(" "));
+        
+		rgb[0] = boost::lexical_cast<float>(strs[0]);
+		rgb[1] = boost::lexical_cast<float>(strs[1]);
+		rgb[2] = boost::lexical_cast<float>(strs[2]);
 		
 		CLock lock(m_mutex);
-		client->m_lights[lightnr].SetRgb(rgb, messageOrg.time);
+		client->m_lights[lightnr].SetRgb(rgb, messageOrg.time);    
 	}
 	else if (message[0] == 's' && message[1] == 'p')
 	{
@@ -534,10 +528,10 @@ bool CClientsHandler::ParseSetLight(CClient* client, const char* message, CMessa
 		
 		bool interpolation;
 		
-    if(message == "true")
-        interpolation = true;
-    else if(message == "false")
-        interpolation = false;
+        if(message == "true")
+            interpolation = true;
+        else if(message == "false")
+            interpolation = false;
 
 		CLock lock(m_mutex);
 		client->m_lights[lightnr].SetInterpolation(interpolation);
@@ -704,4 +698,3 @@ void CClientsHandler::FillChannels(std::vector<CChannel>& channels,
 		}
 	}
 }
-

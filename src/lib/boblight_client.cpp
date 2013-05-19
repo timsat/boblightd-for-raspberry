@@ -2,8 +2,10 @@
  * Boblight
  * Orginal: Copyright (C) Bob  2009 
  * 
+ * ////
  * Modded by Speedy1985 (c) 2013
- * 
+ * ////
+ *
  * boblight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -29,7 +31,7 @@
 // We use the boost library for better cpu performance, the orginal ToString function need to much cpu time.
 //
 #include <boost/lexical_cast.hpp>
-//
+
 
 #include "boblight_client.h"
 #include "util/misc.h"
