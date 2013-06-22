@@ -502,13 +502,12 @@ bool CClientsHandler::ParseSetLight(CClient* client, const char* message, CMessa
 		string value;
 		message = message + 4;
 		//Log("Floats:%s", message);
-        
-        std::vector<std::string> strs;
-        boost::split(strs, message, boost::is_any_of(" "));
-        
-		rgb[0] = boost::lexical_cast<float>(strs[0]);
-		rgb[1] = boost::lexical_cast<float>(strs[1]);
-		rgb[2] = boost::lexical_cast<float>(strs[2]);
+
+		char* pEnd1;
+		char* pEnd2;
+		rgb[0] = strtof(message, &pEnd1);
+		rgb[1] = strtof(pEnd1, &pEnd2);
+		rgb[2] = strtof(pEnd2, NULL);
 		
 		CLock lock(m_mutex);
 		client->m_lights[lightnr].SetRgb(rgb, messageOrg.time);    
