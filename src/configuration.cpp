@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sched.h>
 
 #include "util/log.h"
 #include "util/misc.h"
@@ -308,6 +309,24 @@ bool CConfig::CheckDeviceConfig()
           valid = false;
         }          
       }
+      else if (key == "threadpriority")
+      {
+        int64_t ivalue;
+        if (!StrToInt(value, ivalue))
+        {
+          LogError("%s line %i section [device]: wrong value %s for key %s", m_filename.c_str(), linenr, value.c_str(), key.c_str());
+          valid = false;
+        }
+
+        int priomax = sched_get_priority_max(SCHED_FIFO);
+        int priomin = sched_get_priority_min(SCHED_FIFO);
+        if (ivalue > priomax || ivalue < priomin)
+        {
+          LogError("%s line %i section [device]: threadpriority must be between %i and %i",
+                   m_filename.c_str(), linenr, priomin, priomax);
+          valid = false;
+        }
+      }
       else if (key == "prefix" || key == "postfix")
       { //this is in hex from 00 to FF, separated by spaces, like: prefix FF 7F A0 22
         int ivalue;
@@ -390,7 +409,10 @@ bool CConfig::CheckColorConfig()
 
       if (key == "name")
       {
-        continue;
+        if(value.size() < 3 || value.size() > 3){
+            LogError("%s line %i section [light]: name (%s) must be 3 chars", m_filename.c_str(), linenr, value.c_str());
+            valid = false;
+        }
       }
       else if (key == "gamma" || key == "adjust" || key == "blacklevel")
       { //these are floats from 0.0 to 1.0, except gamma which is from 0.0 and up
@@ -868,6 +890,8 @@ bool CConfig::BuildOla(CDevice*& device, int devicenr, CClientsHandler& clients)
   if (!SetDeviceInterval(device, devicenr))
     return false;
 
+  SetDeviceThreadPriority(device, devicenr);
+
   device->SetType(OLA);
 
   return true;
@@ -893,6 +917,7 @@ bool CConfig::BuildPopen(CDevice*& device, int devicenr, CClientsHandler& client
   SetDeviceAllowSync(device, devicenr);
   SetDeviceDebug(device, devicenr);
   SetDeviceDelayAfterOpen(device, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   device->SetType(POPEN);
   
@@ -922,6 +947,7 @@ bool CConfig::BuildRS232(CDevice*& device, int devicenr, CClientsHandler& client
   SetDeviceAllowSync(device, devicenr);
   SetDeviceDebug(device, devicenr);
   SetDeviceDelayAfterOpen(device, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   bool hasbits = SetDeviceBits(rs232device, devicenr);
   bool hasmax  = SetDeviceMax(rs232device, devicenr);
@@ -975,6 +1001,7 @@ bool CConfig::BuildLtbl(CDevice*& device, int devicenr, CClientsHandler& clients
   SetDeviceAllowSync(device, devicenr);
   SetDeviceDebug(device, devicenr);
   SetDeviceDelayAfterOpen(device, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   device->SetType(LTBL);
   
@@ -1003,6 +1030,7 @@ bool CConfig::BuildSound(CDevice*& device, int devicenr, CClientsHandler& client
     return false;
 
   SetDeviceLatency(sounddevice, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   sounddevice->SetType(SOUND);
 
@@ -1038,6 +1066,7 @@ bool CConfig::BuildiBeLight(CDevice*& device, int devicenr, CClientsHandler& cli
   SetDeviceAddress(ibedevice, devicenr);
   SetDeviceAllowSync(device, devicenr);
   SetDeviceDebug(device, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   ibedevice->SetType(IBELIGHT);
 
@@ -1069,6 +1098,7 @@ bool CConfig::BuildDioder(CDevice*& device, int devicenr, CClientsHandler& clien
   SetDeviceAllowSync(device, devicenr);
   SetDeviceDebug(device, devicenr);
   SetDeviceDelayAfterOpen(device, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   device->SetType(DIODER);
   
@@ -1099,6 +1129,7 @@ bool CConfig::BuildSPI(CDevice*& device, int devicenr, CClientsHandler& clients,
 
   SetDeviceAllowSync(device, devicenr);
   SetDeviceDebug(device, devicenr);
+  SetDeviceThreadPriority(device, devicenr);
 
   if (type == "lpd8806")
     device->SetType(LPD8806);
@@ -1368,6 +1399,20 @@ void CConfig::SetDeviceDelayAfterOpen(CDevice* device, int devicenr)
   int delayafteropen;
   StrToInt(strvalue, delayafteropen);
   device->SetDelayAfterOpen(delayafteropen);
+}
+
+void CConfig::SetDeviceThreadPriority(CDevice* device, int devicenr)
+{
+  string line, strvalue;
+  int linenr = GetLineWithKey("threadpriority", m_devicelines[devicenr].lines, line);
+  if (linenr == -1)
+    return;
+
+  GetWord(line, strvalue);
+
+  int priority;
+  StrToInt(strvalue, priority);
+  device->SetThreadPriority(priority);
 }
 
 bool CConfig::SetLightName(CLight& light, std::vector<CConfigLine>& lines, int lightnr)
