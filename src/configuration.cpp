@@ -409,10 +409,7 @@ bool CConfig::CheckColorConfig()
 
       if (key == "name")
       {
-        if(value.size() < 3 || value.size() > 3){
-            LogError("%s line %i section [light]: name (%s) must be 3 chars", m_filename.c_str(), linenr, value.c_str());
-            valid = false;
-        }
+        continue;
       }
       else if (key == "gamma" || key == "adjust" || key == "blacklevel")
       { //these are floats from 0.0 to 1.0, except gamma which is from 0.0 and up
@@ -473,7 +470,10 @@ bool CConfig::CheckLightConfig()
 
       if (key == "name")
       {
-        continue;
+        if(value.size() < 3 || value.size() > 3){
+            LogError("%s line %i section [light]: name (%s) must be 3 chars", m_filename.c_str(), linenr, value.c_str());
+            valid = false;
+        }
       }
       else if (key == "vscan" || key == "hscan") //check the scanrange, should be two floats from 0.0 to 100.0
       {
