@@ -87,7 +87,8 @@ flagmanager.o: clients/flagmanager.cpp /usr/include/string.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
- /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h /usr/include/math.h \
+ /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h /usr/include/math.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_val.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_valf.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_vall.h \
@@ -95,6 +96,7 @@ flagmanager.o: clients/flagmanager.cpp /usr/include/string.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
  /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h \
  clients/../lib/boblight.h clients/../lib/boblight-functions.h
 
 /usr/include/string.h:
@@ -337,6 +339,8 @@ util/inclstdint.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
 
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
+
 /usr/include/math.h:
 
 /usr/include/arm-linux-gnueabihf/bits/huge_val.h:
@@ -352,6 +356,8 @@ util/inclstdint.h:
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:
 
 clients/../lib/boblight.h:
 

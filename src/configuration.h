@@ -19,9 +19,6 @@
 #ifndef CONFIGURATION
 #define CONFIGURATION
 
-//Fix for spi support
-#define HAVE_LINUX_SPI_SPIDEV_H
-
 #include <string>
 #include <vector>
 
@@ -32,11 +29,13 @@
 #include "device/devicers232.h"
 #include "device/devicedioder.h"
 
+#define HAVE_LINUX_SPI_SPIDEV_H
+
 #ifdef HAVE_LIBPORTAUDIO
   #include "device/devicesound.h"
 #endif
 #ifdef HAVE_LIBUSB
-  #include "device/deviceibelight.h"
+  #include "device/deviceusb.h"
 #endif
 #ifdef HAVE_LINUX_SPI_SPIDEV_H
   #include "device/devicespi.h"
@@ -111,6 +110,7 @@ class CConfig
 #endif
 #ifdef HAVE_LIBUSB
     bool BuildiBeLight(CDevice*& device, int devicenr, CClientsHandler& clients);
+    bool BuildLightpack(CDevice*& device, int devicenr, CClientsHandler& clients);
 #endif
 #ifdef HAVE_LINUX_SPI_SPIDEV_H
     bool BuildSPI(CDevice*& device, int devicenr, CClientsHandler& clients, const std::string& type);
@@ -128,8 +128,8 @@ class CConfig
     void SetDeviceLatency(CDeviceSound* device, int devicenr);
 #endif
 #ifdef HAVE_LIBUSB
-    void SetDeviceBus(CDeviceiBeLight* device, int devicenr);
-    void SetDeviceAddress(CDeviceiBeLight* device, int devicenr);
+    void SetDeviceBus(CDeviceUsb* device, int devicenr);
+    void SetDeviceAddress(CDeviceUsb* device, int devicenr);
 #endif
     void SetDeviceAllowSync(CDevice* device, int devicenr);
     void SetDeviceDebug(CDevice* device, int devicenr);

@@ -22,6 +22,15 @@
 /* Define to 1 if you have the `rt' library (-lrt). */
 #define HAVE_LIBRT 1
 
+/* */
+#define HAVE_LIBUSB 1
+
+/* Define to 1 if you have the <libusb-1.0/libusb.h> header file. */
+#define HAVE_LIBUSB_1_0_LIBUSB_H 1
+
+/* */
+#define HAVE_LIBUSB_ERROR_NAME 1
+
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 

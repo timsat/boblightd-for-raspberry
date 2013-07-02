@@ -14,6 +14,7 @@ log.o: util/log.cpp /usr/include/c++/4.6/cstdarg \
  /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
  /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h \
  /usr/include/c++/4.6/fstream /usr/include/c++/4.6/istream \
  /usr/include/c++/4.6/ios /usr/include/c++/4.6/iosfwd \
  /usr/include/c++/4.6/bits/stringfwd.h \
@@ -109,7 +110,8 @@ log.o: util/log.cpp /usr/include/c++/4.6/cstdarg \
  /usr/include/arm-linux-gnueabihf/bits/inf.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
- /usr/include/arm-linux-gnueabihf/bits/mathcalls.h
+ /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h
 
 /usr/include/c++/4.6/cstdarg:
 
@@ -150,6 +152,8 @@ log.o: util/log.cpp /usr/include/c++/4.6/cstdarg \
 /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
+
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
 
 /usr/include/c++/4.6/fstream:
 
@@ -410,3 +414,5 @@ util/misc.h:
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:

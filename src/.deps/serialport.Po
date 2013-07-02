@@ -74,7 +74,8 @@ serialport.o: util/serialport.cpp /usr/include/c++/4.6/iostream \
  /usr/include/c++/4.6/bits/istream.tcc /usr/include/libio.h \
  /usr/include/_G_config.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
- /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h /usr/include/fcntl.h \
+ /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h /usr/include/fcntl.h \
  /usr/include/arm-linux-gnueabihf/bits/fcntl.h \
  /usr/include/arm-linux-gnueabihf/sys/types.h \
  /usr/include/arm-linux-gnueabihf/sys/select.h \
@@ -99,7 +100,8 @@ serialport.o: util/serialport.cpp /usr/include/c++/4.6/iostream \
  /usr/include/arm-linux-gnueabihf/bits/inf.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
- /usr/include/arm-linux-gnueabihf/bits/mathcalls.h util/baudrate.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h util/baudrate.h \
  util/timeutils.h ../config.h /usr/include/arm-linux-gnueabihf/sys/time.h
 
 /usr/include/c++/4.6/iostream:
@@ -298,6 +300,8 @@ serialport.o: util/serialport.cpp /usr/include/c++/4.6/iostream \
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
 
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
+
 /usr/include/fcntl.h:
 
 /usr/include/arm-linux-gnueabihf/bits/fcntl.h:
@@ -369,6 +373,8 @@ util/misc.h:
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:
 
 util/baudrate.h:
 

@@ -53,6 +53,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = boblightd$(EXEEXT) boblight-constant$(EXEEXT)
+@HAVE_LIBUSB_TRUE@am__append_1 = device/deviceibelight.cpp \
+@HAVE_LIBUSB_TRUE@	device/devicelightpack.cpp
+@HAVE_LIBUSB_TRUE@am__append_2 = -lusb-1.0
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -103,6 +106,17 @@ am_boblight_constant_OBJECTS = boblight-constant.$(OBJEXT) \
 	misc.$(OBJEXT)
 boblight_constant_OBJECTS = $(am_boblight_constant_OBJECTS)
 boblight_constant_LDADD = $(LDADD)
+am__boblightd_SOURCES_DIST = util/condition.cpp util/log.cpp \
+	util/misc.cpp util/mutex.cpp util/thread.cpp util/timer.cpp \
+	util/serialport.cpp util/timeutils.cpp main.cpp \
+	util/tcpsocket.cpp util/messagequeue.cpp client.cpp light.cpp \
+	configuration.cpp device/device.cpp device/devicepopen.cpp \
+	device/devicers232.cpp device/deviceltbl.cpp \
+	device/devicedioder.cpp device/devicespi.cpp \
+	util/signaltimer.cpp device/deviceibelight.cpp \
+	device/devicelightpack.cpp
+@HAVE_LIBUSB_TRUE@am__objects_1 = deviceibelight.$(OBJEXT) \
+@HAVE_LIBUSB_TRUE@	devicelightpack.$(OBJEXT)
 am_boblightd_OBJECTS = condition.$(OBJEXT) log.$(OBJEXT) \
 	misc.$(OBJEXT) mutex.$(OBJEXT) thread.$(OBJEXT) \
 	timer.$(OBJEXT) serialport.$(OBJEXT) timeutils.$(OBJEXT) \
@@ -110,7 +124,7 @@ am_boblightd_OBJECTS = condition.$(OBJEXT) log.$(OBJEXT) \
 	client.$(OBJEXT) light.$(OBJEXT) configuration.$(OBJEXT) \
 	device.$(OBJEXT) devicepopen.$(OBJEXT) devicers232.$(OBJEXT) \
 	deviceltbl.$(OBJEXT) devicedioder.$(OBJEXT) \
-	signaltimer.$(OBJEXT) devicespi.$(OBJEXT)
+	devicespi.$(OBJEXT) signaltimer.$(OBJEXT) $(am__objects_1)
 boblightd_OBJECTS = $(am_boblightd_OBJECTS)
 boblightd_DEPENDENCIES =
 boblightd_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -132,7 +146,7 @@ CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 SOURCES = $(libboblight_la_SOURCES) $(boblight_constant_SOURCES) \
 	$(boblightd_SOURCES)
 DIST_SOURCES = $(libboblight_la_SOURCES) $(boblight_constant_SOURCES) \
-	$(boblightd_SOURCES)
+	$(am__boblightd_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -273,9 +287,9 @@ boblightd_SOURCES = util/condition.cpp util/log.cpp util/misc.cpp \
 	util/tcpsocket.cpp util/messagequeue.cpp client.cpp light.cpp \
 	configuration.cpp device/device.cpp device/devicepopen.cpp \
 	device/devicers232.cpp device/deviceltbl.cpp \
-	device/devicedioder.cpp util/signaltimer.cpp \
-	device/devicespi.cpp
-boblightd_LDFLAGS = 
+	device/devicedioder.cpp device/devicespi.cpp \
+	util/signaltimer.cpp $(am__append_1)
+boblightd_LDFLAGS = $(am__append_2)
 boblightd_LDADD = 
 lib_LTLIBRARIES = \
 	libboblight.la
@@ -421,6 +435,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/configuration.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/device.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/devicedioder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/deviceibelight.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/devicelightpack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/deviceltbl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/devicepopen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/devicers232.Po@am__quote@
@@ -753,6 +769,20 @@ devicedioder.obj: device/devicedioder.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicedioder.obj `if test -f 'device/devicedioder.cpp'; then $(CYGPATH_W) 'device/devicedioder.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicedioder.cpp'; fi`
 
+devicespi.o: device/devicespi.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT devicespi.o -MD -MP -MF $(DEPDIR)/devicespi.Tpo -c -o devicespi.o `test -f 'device/devicespi.cpp' || echo '$(srcdir)/'`device/devicespi.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/devicespi.Tpo $(DEPDIR)/devicespi.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/devicespi.cpp' object='devicespi.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicespi.o `test -f 'device/devicespi.cpp' || echo '$(srcdir)/'`device/devicespi.cpp
+
+devicespi.obj: device/devicespi.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT devicespi.obj -MD -MP -MF $(DEPDIR)/devicespi.Tpo -c -o devicespi.obj `if test -f 'device/devicespi.cpp'; then $(CYGPATH_W) 'device/devicespi.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicespi.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/devicespi.Tpo $(DEPDIR)/devicespi.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/devicespi.cpp' object='devicespi.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicespi.obj `if test -f 'device/devicespi.cpp'; then $(CYGPATH_W) 'device/devicespi.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicespi.cpp'; fi`
+
 signaltimer.o: util/signaltimer.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT signaltimer.o -MD -MP -MF $(DEPDIR)/signaltimer.Tpo -c -o signaltimer.o `test -f 'util/signaltimer.cpp' || echo '$(srcdir)/'`util/signaltimer.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/signaltimer.Tpo $(DEPDIR)/signaltimer.Po
@@ -767,19 +797,33 @@ signaltimer.obj: util/signaltimer.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o signaltimer.obj `if test -f 'util/signaltimer.cpp'; then $(CYGPATH_W) 'util/signaltimer.cpp'; else $(CYGPATH_W) '$(srcdir)/util/signaltimer.cpp'; fi`
 
-devicespi.o: device/devicespi.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT devicespi.o -MD -MP -MF $(DEPDIR)/devicespi.Tpo -c -o devicespi.o `test -f 'device/devicespi.cpp' || echo '$(srcdir)/'`device/devicespi.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/devicespi.Tpo $(DEPDIR)/devicespi.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/devicespi.cpp' object='devicespi.o' libtool=no @AMDEPBACKSLASH@
+deviceibelight.o: device/deviceibelight.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT deviceibelight.o -MD -MP -MF $(DEPDIR)/deviceibelight.Tpo -c -o deviceibelight.o `test -f 'device/deviceibelight.cpp' || echo '$(srcdir)/'`device/deviceibelight.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/deviceibelight.Tpo $(DEPDIR)/deviceibelight.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/deviceibelight.cpp' object='deviceibelight.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicespi.o `test -f 'device/devicespi.cpp' || echo '$(srcdir)/'`device/devicespi.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o deviceibelight.o `test -f 'device/deviceibelight.cpp' || echo '$(srcdir)/'`device/deviceibelight.cpp
 
-devicespi.obj: device/devicespi.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT devicespi.obj -MD -MP -MF $(DEPDIR)/devicespi.Tpo -c -o devicespi.obj `if test -f 'device/devicespi.cpp'; then $(CYGPATH_W) 'device/devicespi.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicespi.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/devicespi.Tpo $(DEPDIR)/devicespi.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/devicespi.cpp' object='devicespi.obj' libtool=no @AMDEPBACKSLASH@
+deviceibelight.obj: device/deviceibelight.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT deviceibelight.obj -MD -MP -MF $(DEPDIR)/deviceibelight.Tpo -c -o deviceibelight.obj `if test -f 'device/deviceibelight.cpp'; then $(CYGPATH_W) 'device/deviceibelight.cpp'; else $(CYGPATH_W) '$(srcdir)/device/deviceibelight.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/deviceibelight.Tpo $(DEPDIR)/deviceibelight.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/deviceibelight.cpp' object='deviceibelight.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicespi.obj `if test -f 'device/devicespi.cpp'; then $(CYGPATH_W) 'device/devicespi.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicespi.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o deviceibelight.obj `if test -f 'device/deviceibelight.cpp'; then $(CYGPATH_W) 'device/deviceibelight.cpp'; else $(CYGPATH_W) '$(srcdir)/device/deviceibelight.cpp'; fi`
+
+devicelightpack.o: device/devicelightpack.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT devicelightpack.o -MD -MP -MF $(DEPDIR)/devicelightpack.Tpo -c -o devicelightpack.o `test -f 'device/devicelightpack.cpp' || echo '$(srcdir)/'`device/devicelightpack.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/devicelightpack.Tpo $(DEPDIR)/devicelightpack.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/devicelightpack.cpp' object='devicelightpack.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicelightpack.o `test -f 'device/devicelightpack.cpp' || echo '$(srcdir)/'`device/devicelightpack.cpp
+
+devicelightpack.obj: device/devicelightpack.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT devicelightpack.obj -MD -MP -MF $(DEPDIR)/devicelightpack.Tpo -c -o devicelightpack.obj `if test -f 'device/devicelightpack.cpp'; then $(CYGPATH_W) 'device/devicelightpack.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicelightpack.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/devicelightpack.Tpo $(DEPDIR)/devicelightpack.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='device/devicelightpack.cpp' object='devicelightpack.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o devicelightpack.obj `if test -f 'device/devicelightpack.cpp'; then $(CYGPATH_W) 'device/devicelightpack.cpp'; else $(CYGPATH_W) '$(srcdir)/device/devicelightpack.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

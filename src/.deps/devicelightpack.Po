@@ -1,18 +1,13 @@
-timer.o: util/timer.cpp util/timer.h util/inclstdint.h \
- /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdint.h \
+devicelightpack.o: device/devicelightpack.cpp ../config.h \
+ device/devicelightpack.h device/deviceusb.h device/device.h \
+ util/inclstdint.h /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdint.h \
  /usr/include/stdint.h /usr/include/features.h \
  /usr/include/arm-linux-gnueabihf/bits/predefs.h \
  /usr/include/arm-linux-gnueabihf/sys/cdefs.h \
  /usr/include/arm-linux-gnueabihf/bits/wordsize.h \
  /usr/include/arm-linux-gnueabihf/gnu/stubs.h \
  /usr/include/arm-linux-gnueabihf/bits/wchar.h /usr/include/inttypes.h \
- /usr/include/unistd.h /usr/include/arm-linux-gnueabihf/bits/posix_opt.h \
- /usr/include/arm-linux-gnueabihf/bits/environments.h \
- /usr/include/arm-linux-gnueabihf/bits/types.h \
- /usr/include/arm-linux-gnueabihf/bits/typesizes.h \
- /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stddef.h \
- /usr/include/arm-linux-gnueabihf/bits/confname.h /usr/include/getopt.h \
- util/misc.h /usr/include/c++/4.6/string \
+ /usr/include/c++/4.6/string \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/c++config.h \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/os_defines.h \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/cpu_defines.h \
@@ -32,6 +27,7 @@ timer.o: util/timer.cpp util/timer.h util/inclstdint.h \
  /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/postypes.h \
  /usr/include/c++/4.6/cwchar /usr/include/wchar.h /usr/include/stdio.h \
  /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdarg.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stddef.h \
  /usr/include/xlocale.h /usr/include/c++/4.6/bits/allocator.h \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/c++allocator.h \
  /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
@@ -40,7 +36,8 @@ timer.o: util/timer.cpp util/timer.h util/inclstdint.h \
  /usr/include/c++/4.6/clocale /usr/include/locale.h \
  /usr/include/arm-linux-gnueabihf/bits/locale.h \
  /usr/include/c++/4.6/iosfwd /usr/include/c++/4.6/cctype \
- /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/ctype.h /usr/include/arm-linux-gnueabihf/bits/types.h \
+ /usr/include/arm-linux-gnueabihf/bits/typesizes.h /usr/include/endian.h \
  /usr/include/arm-linux-gnueabihf/bits/endian.h \
  /usr/include/arm-linux-gnueabihf/bits/byteswap.h \
  /usr/include/c++/4.6/bits/ostream_insert.h \
@@ -56,10 +53,20 @@ timer.o: util/timer.cpp util/timer.h util/inclstdint.h \
  /usr/include/arm-linux-gnueabihf/bits/sched.h \
  /usr/include/arm-linux-gnueabihf/bits/time.h \
  /usr/include/arm-linux-gnueabihf/bits/pthreadtypes.h \
- /usr/include/arm-linux-gnueabihf/bits/setjmp.h \
+ /usr/include/arm-linux-gnueabihf/bits/setjmp.h /usr/include/unistd.h \
+ /usr/include/arm-linux-gnueabihf/bits/posix_opt.h \
+ /usr/include/arm-linux-gnueabihf/bits/environments.h \
+ /usr/include/arm-linux-gnueabihf/bits/confname.h /usr/include/getopt.h \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/atomic_word.h \
  /usr/include/c++/4.6/initializer_list \
- /usr/include/c++/4.6/bits/basic_string.tcc /usr/include/c++/4.6/sstream \
+ /usr/include/c++/4.6/bits/basic_string.tcc /usr/include/c++/4.6/vector \
+ /usr/include/c++/4.6/bits/stl_construct.h \
+ /usr/include/c++/4.6/bits/stl_uninitialized.h \
+ /usr/include/c++/4.6/bits/stl_vector.h \
+ /usr/include/c++/4.6/bits/stl_bvector.h \
+ /usr/include/c++/4.6/bits/vector.tcc util/thread.h util/inclstdint.h \
+ util/signaltimer.h util/timer.h util/condition.h util/mutex.h client.h \
+ util/inclstdint.h util/misc.h /usr/include/c++/4.6/sstream \
  /usr/include/c++/4.6/istream /usr/include/c++/4.6/ios \
  /usr/include/c++/4.6/bits/ios_base.h \
  /usr/include/c++/4.6/bits/locale_classes.h \
@@ -90,14 +97,40 @@ timer.o: util/timer.cpp util/timer.h util/inclstdint.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
  /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
- /usr/include/arm-linux-gnueabihf/bits/mathinline.h util/timeutils.h \
- ../config.h /usr/include/arm-linux-gnueabihf/sys/time.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h util/mutex.h \
+ util/thread.h util/tcpsocket.h /usr/include/netinet/in.h \
+ /usr/include/arm-linux-gnueabihf/sys/socket.h \
+ /usr/include/arm-linux-gnueabihf/sys/uio.h \
+ /usr/include/arm-linux-gnueabihf/sys/types.h \
  /usr/include/arm-linux-gnueabihf/sys/select.h \
  /usr/include/arm-linux-gnueabihf/bits/select.h \
  /usr/include/arm-linux-gnueabihf/bits/sigset.h \
- /usr/include/c++/4.6/iostream
+ /usr/include/arm-linux-gnueabihf/sys/sysmacros.h \
+ /usr/include/arm-linux-gnueabihf/bits/uio.h \
+ /usr/include/arm-linux-gnueabihf/bits/socket.h \
+ /usr/include/arm-linux-gnueabihf/bits/sockaddr.h \
+ /usr/include/arm-linux-gnueabihf/asm/socket.h \
+ /usr/include/arm-linux-gnueabihf/asm/sockios.h \
+ /usr/include/arm-linux-gnueabihf/bits/in.h util/messagequeue.h light.h \
+ /usr/include/c++/4.6/utility /usr/include/c++/4.6/bits/stl_relops.h \
+ device/device.h /usr/include/libusb-1.0/libusb.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/limits.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/arm-linux-gnueabihf/bits/posix1_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/arm-linux-gnueabihf/bits/posix2_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/xopen_lim.h \
+ /usr/include/arm-linux-gnueabihf/sys/time.h util/log.h util/misc.h \
+ util/timeutils.h
 
-util/timer.h:
+../config.h:
+
+device/devicelightpack.h:
+
+device/deviceusb.h:
+
+device/device.h:
 
 util/inclstdint.h:
 
@@ -118,24 +151,6 @@ util/inclstdint.h:
 /usr/include/arm-linux-gnueabihf/bits/wchar.h:
 
 /usr/include/inttypes.h:
-
-/usr/include/unistd.h:
-
-/usr/include/arm-linux-gnueabihf/bits/posix_opt.h:
-
-/usr/include/arm-linux-gnueabihf/bits/environments.h:
-
-/usr/include/arm-linux-gnueabihf/bits/types.h:
-
-/usr/include/arm-linux-gnueabihf/bits/typesizes.h:
-
-/usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stddef.h:
-
-/usr/include/arm-linux-gnueabihf/bits/confname.h:
-
-/usr/include/getopt.h:
-
-util/misc.h:
 
 /usr/include/c++/4.6/string:
 
@@ -185,6 +200,8 @@ util/misc.h:
 
 /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdarg.h:
 
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stddef.h:
+
 /usr/include/xlocale.h:
 
 /usr/include/c++/4.6/bits/allocator.h:
@@ -212,6 +229,10 @@ util/misc.h:
 /usr/include/c++/4.6/cctype:
 
 /usr/include/ctype.h:
+
+/usr/include/arm-linux-gnueabihf/bits/types.h:
+
+/usr/include/arm-linux-gnueabihf/bits/typesizes.h:
 
 /usr/include/endian.h:
 
@@ -251,11 +272,51 @@ util/misc.h:
 
 /usr/include/arm-linux-gnueabihf/bits/setjmp.h:
 
+/usr/include/unistd.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix_opt.h:
+
+/usr/include/arm-linux-gnueabihf/bits/environments.h:
+
+/usr/include/arm-linux-gnueabihf/bits/confname.h:
+
+/usr/include/getopt.h:
+
 /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/atomic_word.h:
 
 /usr/include/c++/4.6/initializer_list:
 
 /usr/include/c++/4.6/bits/basic_string.tcc:
+
+/usr/include/c++/4.6/vector:
+
+/usr/include/c++/4.6/bits/stl_construct.h:
+
+/usr/include/c++/4.6/bits/stl_uninitialized.h:
+
+/usr/include/c++/4.6/bits/stl_vector.h:
+
+/usr/include/c++/4.6/bits/stl_bvector.h:
+
+/usr/include/c++/4.6/bits/vector.tcc:
+
+util/thread.h:
+
+util/inclstdint.h:
+
+util/signaltimer.h:
+
+util/timer.h:
+
+util/condition.h:
+
+util/mutex.h:
+
+client.h:
+
+util/inclstdint.h:
+
+util/misc.h:
 
 /usr/include/c++/4.6/sstream:
 
@@ -343,11 +404,19 @@ util/misc.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathinline.h:
 
-util/timeutils.h:
+util/mutex.h:
 
-../config.h:
+util/thread.h:
 
-/usr/include/arm-linux-gnueabihf/sys/time.h:
+util/tcpsocket.h:
+
+/usr/include/netinet/in.h:
+
+/usr/include/arm-linux-gnueabihf/sys/socket.h:
+
+/usr/include/arm-linux-gnueabihf/sys/uio.h:
+
+/usr/include/arm-linux-gnueabihf/sys/types.h:
 
 /usr/include/arm-linux-gnueabihf/sys/select.h:
 
@@ -355,4 +424,52 @@ util/timeutils.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sigset.h:
 
-/usr/include/c++/4.6/iostream:
+/usr/include/arm-linux-gnueabihf/sys/sysmacros.h:
+
+/usr/include/arm-linux-gnueabihf/bits/uio.h:
+
+/usr/include/arm-linux-gnueabihf/bits/socket.h:
+
+/usr/include/arm-linux-gnueabihf/bits/sockaddr.h:
+
+/usr/include/arm-linux-gnueabihf/asm/socket.h:
+
+/usr/include/arm-linux-gnueabihf/asm/sockios.h:
+
+/usr/include/arm-linux-gnueabihf/bits/in.h:
+
+util/messagequeue.h:
+
+light.h:
+
+/usr/include/c++/4.6/utility:
+
+/usr/include/c++/4.6/bits/stl_relops.h:
+
+device/device.h:
+
+/usr/include/libusb-1.0/libusb.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/limits.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix1_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix2_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/xopen_lim.h:
+
+/usr/include/arm-linux-gnueabihf/sys/time.h:
+
+util/log.h:
+
+util/misc.h:
+
+util/timeutils.h:

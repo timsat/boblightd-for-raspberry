@@ -32,13 +32,18 @@ boblightd_SOURCES = \
 	device/devicers232.cpp \
 	device/deviceltbl.cpp \
 	device/devicedioder.cpp \
-        util/signaltimer.cpp
+	device/devicespi.cpp \
+    util/signaltimer.cpp
 
 boblightd_LDFLAGS =
 
 boblightd_LDADD = 
 
-boblightd_SOURCES += device/devicespi.cpp
+if HAVE_LIBUSB
+boblightd_SOURCES += device/deviceibelight.cpp
+boblightd_SOURCES += device/devicelightpack.cpp
+boblightd_LDFLAGS += -lusb-1.0
+endif
 
 lib_LTLIBRARIES = \
 	libboblight.la

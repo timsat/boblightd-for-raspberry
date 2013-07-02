@@ -81,14 +81,16 @@ libboblight_la-misc.lo: util/misc.cpp /usr/include/c++/4.6/iostream \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/string.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
- /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h /usr/include/math.h \
+ /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h /usr/include/math.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_val.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_valf.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_vall.h \
  /usr/include/arm-linux-gnueabihf/bits/inf.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
- /usr/include/arm-linux-gnueabihf/bits/mathcalls.h
+ /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h
 
 /usr/include/c++/4.6/iostream:
 
@@ -316,6 +318,8 @@ util/inclstdint.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
 
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
+
 /usr/include/math.h:
 
 /usr/include/arm-linux-gnueabihf/bits/huge_val.h:
@@ -331,3 +335,5 @@ util/inclstdint.h:
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:

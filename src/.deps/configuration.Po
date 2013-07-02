@@ -79,6 +79,7 @@ configuration.o: configuration.cpp util/inclstdint.h \
  /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
  /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/basic_file.h \
  /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/c++io.h \
  /usr/include/c++/4.6/bits/fstream.tcc util/log.h util/misc.h \
@@ -94,7 +95,8 @@ configuration.o: configuration.cpp util/inclstdint.h \
  /usr/include/arm-linux-gnueabihf/bits/inf.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
- /usr/include/arm-linux-gnueabihf/bits/mathcalls.h configuration.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h configuration.h \
  /usr/include/c++/4.6/vector /usr/include/c++/4.6/bits/stl_construct.h \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
@@ -120,7 +122,17 @@ configuration.o: configuration.cpp util/inclstdint.h \
  device/devicers232.h device/device.h util/serialport.h \
  /usr/include/termios.h /usr/include/arm-linux-gnueabihf/bits/termios.h \
  /usr/include/arm-linux-gnueabihf/sys/ttydefaults.h device/devicedioder.h \
- device/devicers232.h device/devicepopen.h device/deviceltbl.h
+ device/devicers232.h device/deviceusb.h device/devicespi.h \
+ device/devicepopen.h device/deviceltbl.h device/devicelightpack.h \
+ device/deviceusb.h /usr/include/libusb-1.0/libusb.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/limits.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/arm-linux-gnueabihf/bits/posix1_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/arm-linux-gnueabihf/bits/posix2_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/xopen_lim.h \
+ /usr/include/arm-linux-gnueabihf/sys/time.h device/deviceibelight.h
 
 util/inclstdint.h:
 
@@ -332,6 +344,8 @@ util/inclstdint.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
 
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
+
 /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/basic_file.h:
 
 /usr/include/c++/4.6/arm-linux-gnueabihf/./bits/c++io.h:
@@ -379,6 +393,8 @@ util/inclstdint.h:
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:
 
 configuration.h:
 
@@ -474,6 +490,36 @@ device/devicedioder.h:
 
 device/devicers232.h:
 
+device/deviceusb.h:
+
+device/devicespi.h:
+
 device/devicepopen.h:
 
 device/deviceltbl.h:
+
+device/devicelightpack.h:
+
+device/deviceusb.h:
+
+/usr/include/libusb-1.0/libusb.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/limits.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix1_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix2_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/xopen_lim.h:
+
+/usr/include/arm-linux-gnueabihf/sys/time.h:
+
+device/deviceibelight.h:

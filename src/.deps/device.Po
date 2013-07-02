@@ -9,7 +9,8 @@ device.o: device/device.cpp /usr/include/math.h /usr/include/features.h \
  /usr/include/arm-linux-gnueabihf/bits/inf.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
- /usr/include/arm-linux-gnueabihf/bits/mathcalls.h device/device.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h device/device.h \
  util/inclstdint.h /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdint.h \
  /usr/include/stdint.h /usr/include/arm-linux-gnueabihf/bits/wchar.h \
  /usr/include/inttypes.h /usr/include/c++/4.6/string \
@@ -93,8 +94,9 @@ device.o: device/device.cpp /usr/include/math.h /usr/include/features.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/string.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
- /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h util/mutex.h \
- util/thread.h util/tcpsocket.h /usr/include/netinet/in.h \
+ /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h util/mutex.h util/thread.h \
+ util/tcpsocket.h /usr/include/netinet/in.h \
  /usr/include/arm-linux-gnueabihf/sys/socket.h \
  /usr/include/arm-linux-gnueabihf/sys/uio.h \
  /usr/include/arm-linux-gnueabihf/sys/types.h \
@@ -137,6 +139,8 @@ device.o: device/device.cpp /usr/include/math.h /usr/include/features.h \
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:
 
 device/device.h:
 
@@ -381,6 +385,8 @@ util/misc.h:
 /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
+
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
 
 util/mutex.h:
 

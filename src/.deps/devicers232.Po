@@ -80,14 +80,16 @@ devicers232.o: device/devicers232.cpp /usr/include/string.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
- /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h /usr/include/math.h \
+ /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h /usr/include/math.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_val.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_valf.h \
  /usr/include/arm-linux-gnueabihf/bits/huge_vall.h \
  /usr/include/arm-linux-gnueabihf/bits/inf.h \
  /usr/include/arm-linux-gnueabihf/bits/nan.h \
  /usr/include/arm-linux-gnueabihf/bits/mathdef.h \
- /usr/include/arm-linux-gnueabihf/bits/mathcalls.h device/devicers232.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathcalls.h \
+ /usr/include/arm-linux-gnueabihf/bits/mathinline.h device/devicers232.h \
  device/device.h util/inclstdint.h /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_construct.h \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
@@ -341,6 +343,8 @@ util/inclstdint.h:
 
 /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
 
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
+
 /usr/include/math.h:
 
 /usr/include/arm-linux-gnueabihf/bits/huge_val.h:
@@ -356,6 +360,8 @@ util/inclstdint.h:
 /usr/include/arm-linux-gnueabihf/bits/mathdef.h:
 
 /usr/include/arm-linux-gnueabihf/bits/mathcalls.h:
+
+/usr/include/arm-linux-gnueabihf/bits/mathinline.h:
 
 device/devicers232.h:
 

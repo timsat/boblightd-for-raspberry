@@ -51,9 +51,9 @@ void CDeviceRS232::SetType(int type)
   }
   else if (type == SEDU)
   {
-    m_prefix.push_back(0xA5);
     m_prefix.push_back(0x5A);
-    m_postfix.push_back(0xA1);
+    m_prefix.push_back(0xA1);
+    m_postfix.push_back(0xA5);
   }
 }
 
