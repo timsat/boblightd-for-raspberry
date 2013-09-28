@@ -20,6 +20,9 @@
 #define CDEVICEUSB 
 
 #include "device.h"
+#include <string>
+
+#define USBDEVICE_SERIAL_SIZE 256
 
 class CDeviceUsb: public CDevice
 {
@@ -28,9 +31,12 @@ class CDeviceUsb: public CDevice
 
     void SetBusNumber(int num)         { m_busnumber = num;         }
     void SetDeviceAddress(int address) { m_deviceaddress = address; }
+    void SetSerial(std::string &serial){ strncpy(m_serial, serial.data(), USBDEVICE_SERIAL_SIZE); }
 
+  protected:
     int  m_busnumber;
     int  m_deviceaddress;
+    char m_serial[USBDEVICE_SERIAL_SIZE];
 };
 
 #endif //CDEVICEUSB 

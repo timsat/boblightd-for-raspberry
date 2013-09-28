@@ -22,15 +22,20 @@
 #include "util/misc.h"
 #include "util/timeutils.h"
 
-#define LIGHTPACK_VID       0x03EB
-#define LIGHTPACK_PID       0x204F
+#define LIGHTPACK_VID_LEGACY 0x03EB
+#define LIGHTPACK_PID_LEGACY 0x204F
+#define LIGHTPACK_VID       0x1D50
+#define LIGHTPACK_PID       0x6022
 #define LIGHTPACK_INTERFACE 0
 #define LIGHTPACK_TIMEOUT   100
+
+int get_serial_number(libusb_device *dev, const libusb_device_descriptor &descriptor, char *buf, size_t size);
 
 CDeviceLightpack::CDeviceLightpack(CClientsHandler& clients) : CDeviceUsb(clients)
 {
   m_usbcontext    = NULL;
   m_devicehandle  = NULL;
+  memset(m_serial, 0, sizeof(m_serial));
 }
 
 void CDeviceLightpack::Sync()
@@ -55,6 +60,8 @@ bool CDeviceLightpack::SetupDevice()
   libusb_device** devicelist;
   ssize_t         nrdevices = libusb_get_device_list(m_usbcontext, &devicelist);
 
+  bool isSerialSet = strlen(m_serial) != 0;
+
   for (ssize_t i = 0; i < nrdevices; i++)
   {
     libusb_device_descriptor descriptor;
@@ -66,44 +73,50 @@ bool CDeviceLightpack::SetupDevice()
     }
 
     //try to find a usb device with the Lightpack vendor and product ID
-    if (descriptor.idVendor == LIGHTPACK_VID && descriptor.idProduct == LIGHTPACK_PID)
+    if ((descriptor.idVendor == LIGHTPACK_VID && descriptor.idProduct == LIGHTPACK_PID) ||
+        (descriptor.idVendor == LIGHTPACK_VID_LEGACY && descriptor.idProduct == LIGHTPACK_PID_LEGACY))
     {
-
       int busnumber = libusb_get_bus_number(devicelist[i]);
       int deviceaddress = libusb_get_device_address(devicelist[i]);
 
-      Log("%s: found Lightpack at bus %d address %d", m_name.c_str(), busnumber, deviceaddress);
+      char serial[USBDEVICE_SERIAL_SIZE];
+      error = get_serial_number(devicelist[i], descriptor, serial, USBDEVICE_SERIAL_SIZE);
+      if (error > 0)
+        Log("%s: found Lightpack at bus %d address %d, serial is %s", m_name.c_str(), busnumber, deviceaddress, serial);
+      else
+        Log("%s: found Lightpack at bus %d address %d. Couldn't get serial.", m_name.c_str(), busnumber, deviceaddress);
+
 
       if (m_devicehandle == NULL
-          && ( m_busnumber == -1 || m_deviceaddress == -1 || ( m_busnumber == busnumber && m_deviceaddress == deviceaddress )))
+            && (isSerialSet && strncmp(m_serial, serial, USBDEVICE_SERIAL_SIZE)==0
+                || !isSerialSet && (m_busnumber == -1 || m_busnumber == busnumber) && (m_deviceaddress == -1 || m_deviceaddress == deviceaddress)))
       {
+        libusb_device_handle *devhandle;
 
-          libusb_device_handle *devhandle;
+        error = libusb_open(devicelist[i], &devhandle);
+        if (error != LIBUSB_SUCCESS)
+        {
+          LogError("%s: error opening device, error %i %s", m_name.c_str(), error, UsbErrorName(error));
+          return false;
+        }
 
-          error = libusb_open(devicelist[i], &devhandle);
-          if (error != LIBUSB_SUCCESS)
-          {
-            LogError("%s: error opening device, error %i %s", m_name.c_str(), error, UsbErrorName(error));
-            return false;
-          }
+        if ((error=libusb_detach_kernel_driver(devhandle, LIGHTPACK_INTERFACE)) != LIBUSB_SUCCESS) {
+          LogError("%s: error detaching interface %i, error:%i %s", m_name.c_str(), LIGHTPACK_INTERFACE, error, UsbErrorName(error));
+          return false;
+        }
 
-          if ((error=libusb_detach_kernel_driver(devhandle, LIGHTPACK_INTERFACE)) != LIBUSB_SUCCESS) {
-            LogError("%s: error detaching interface %i, error:%i %s", m_name.c_str(), LIGHTPACK_INTERFACE, error, UsbErrorName(error));
-            return false;
-          }
+        if ((error = libusb_claim_interface(devhandle, LIGHTPACK_INTERFACE)) != LIBUSB_SUCCESS)
+        {
+          LogError("%s: error claiming interface %i, error:%i %s", m_name.c_str(), LIGHTPACK_INTERFACE, error, UsbErrorName(error));
+          return false;
+        }
 
-          if ((error = libusb_claim_interface(devhandle, LIGHTPACK_INTERFACE)) != LIBUSB_SUCCESS)
-          {
-            LogError("%s: error claiming interface %i, error:%i %s", m_name.c_str(), LIGHTPACK_INTERFACE, error, UsbErrorName(error));
-            return false;
-          }
+        m_devicehandle = devhandle;
 
-          m_devicehandle = devhandle;
+        //Disable internal smoothness implementation
+        DisableSmoothness();
 
-          //Disable internal smoothness implementation
-          DisableSmoothness();
-
-          Log("%s: Lightpack is initialized, bus %d device address %d", m_name.c_str(), busnumber, deviceaddress);
+        Log("%s: Lightpack is initialized, bus %d device address %d", m_name.c_str(), busnumber, deviceaddress);
       }
     }
   }
@@ -112,10 +125,14 @@ bool CDeviceLightpack::SetupDevice()
 
   if (m_devicehandle == NULL)
   {
-    if(m_busnumber == -1 || m_deviceaddress == -1)
-        LogError("%s: no Lightpack device with vid %04x and pid %04x found", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID);
-    else
-        LogError("%s: no Lightpack device with vid %04x and pid %04x found at bus %i, address %i", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID, m_busnumber, m_deviceaddress);
+    if(isSerialSet) {
+      LogError("%s: no Lightpack device with serial number %s found", m_name.c_str(), m_serial);
+    } else {
+      if(m_busnumber == -1 || m_deviceaddress == -1)
+        LogError("%s: no Lightpack device found", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID);
+      else
+        LogError("%s: no Lightpack device found at bus %i, address %i", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID, m_busnumber, m_deviceaddress);
+    }
 
     return false;
   }
@@ -127,8 +144,9 @@ bool CDeviceLightpack::SetupDevice()
   return true;
 }
 
-inline unsigned int Get12bitColor(CChannel *channel, int64_t now) {
-    return Clamp((unsigned int)Round64((double)channel->GetValue(now) * 4095), 0, 4095);
+inline unsigned int Get12bitColor(CChannel *channel, int64_t now)
+{
+  return Clamp((unsigned int)Round64((double)channel->GetValue(now) * 4095), 0, 4095);
 }
 
 bool CDeviceLightpack::WriteOutput()
@@ -148,29 +166,29 @@ bool CDeviceLightpack::WriteOutput()
     unsigned int g = Get12bitColor(&m_channels[i+1], now); 
     unsigned int b = Get12bitColor(&m_channels[i+2], now); 
 
-     m_buf[idx++] = (r >> 4) & 0xff;
-     m_buf[idx++] = (g >> 4) & 0xff;
-     m_buf[idx++] = (b >> 4) & 0xff;
+    m_buf[idx++] = (r >> 4) & 0xff;
+    m_buf[idx++] = (g >> 4) & 0xff;
+    m_buf[idx++] = (b >> 4) & 0xff;
 
-     m_buf[idx++] = r & 0x0f;
-     m_buf[idx++] = g & 0x0f;
-     m_buf[idx++] = b & 0x0f;
-
+    m_buf[idx++] = r & 0x0f;
+    m_buf[idx++] = g & 0x0f;
+    m_buf[idx++] = b & 0x0f;
   }
-  if (idx < 61) {
+
+  if (idx < 61)
     memset(m_buf + idx, 0, 61 - idx);
-  }
+
   int result = libusb_control_transfer(m_devicehandle,
-                                          LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS
-                                          | LIBUSB_RECIPIENT_INTERFACE,
-                                          0x09,
-                                          (2 << 8),
-                                          0x00,
-                                          m_buf, 61, LIGHTPACK_TIMEOUT);
+                                       LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS
+                                       | LIBUSB_RECIPIENT_INTERFACE,
+                                       0x09,
+                                       (2 << 8),
+                                       0x00,
+                                       m_buf, 61, LIGHTPACK_TIMEOUT);
 
   m_timer.Wait();
 
-  return true;
+  return result == 61;
 }
 
 bool CDeviceLightpack::DisableSmoothness()
@@ -185,7 +203,7 @@ bool CDeviceLightpack::DisableSmoothness()
                                              (2 << 8),
                                              0x00,
                                              buf, 2, LIGHTPACK_TIMEOUT);
-  
+  return result == 2;
 }
 
 void CDeviceLightpack::CloseDevice()
@@ -215,3 +233,19 @@ const char* CDeviceLightpack::UsbErrorName(int errcode)
 #endif
 }
 
+
+int get_serial_number(libusb_device *dev, const libusb_device_descriptor &descriptor, char *buf, size_t size)
+{
+  libusb_device_handle *devhandle;
+
+  int error = libusb_open(dev, &devhandle);
+  if (error != LIBUSB_SUCCESS)
+  {
+    return error;
+  }
+
+  memset(buf, 0, size);
+  error = libusb_get_string_descriptor_ascii(devhandle, descriptor.iSerialNumber, reinterpret_cast<unsigned char *>(buf), size);
+  libusb_close(devhandle);
+  return error;
+}

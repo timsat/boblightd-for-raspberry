@@ -302,7 +302,7 @@ bool CConfig::CheckDeviceConfig()
         continue;
       }
 
-      if (key == "name" || key == "output" || key == "type")
+      if (key == "name" || key == "output" || key == "type" || key == "serial")
       {
         continue; //can't check these here
       }
@@ -1113,6 +1113,7 @@ bool CConfig::BuildLightpack(CDevice*& device, int devicenr, CClientsHandler& cl
   if (!SetDeviceInterval(device, devicenr))
     return false;
 
+  SetDeviceSerial(lightpackdevice, devicenr);
   SetDeviceBus(lightpackdevice, devicenr);
   SetDeviceAddress(lightpackdevice, devicenr);
   SetDeviceAllowSync(lightpackdevice, devicenr);
@@ -1348,6 +1349,18 @@ void CConfig::SetDeviceLatency(CDeviceSound* device, int devicenr)
 #endif
 
 #ifdef HAVE_LIBUSB
+void CConfig::SetDeviceSerial(CDeviceUsb* device, int devicenr)
+{
+  string line, strvalue;
+  int linenr = GetLineWithKey("serial", m_devicelines[devicenr].lines, line);
+  if (linenr == -1)
+    return;
+
+  GetWord(line, strvalue);
+
+  device->SetSerial(strvalue);
+}
+
 void CConfig::SetDeviceBus(CDeviceUsb* device, int devicenr)
 {
   string line, strvalue;

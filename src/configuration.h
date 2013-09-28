@@ -128,6 +128,7 @@ class CConfig
     void SetDeviceLatency(CDeviceSound* device, int devicenr);
 #endif
 #ifdef HAVE_LIBUSB
+    void SetDeviceSerial(CDeviceUsb* device, int devicenr);
     void SetDeviceBus(CDeviceUsb* device, int devicenr);
     void SetDeviceAddress(CDeviceUsb* device, int devicenr);
 #endif
